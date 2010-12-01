@@ -3,3 +3,4 @@ test*
 moo
 *.swp
 pkg
+/.rvmrc
