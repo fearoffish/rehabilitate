@@ -1,0 +1,33 @@
+Rehabilitate
+============
+
+More to come, here's the comnandline output:
+
+    NAME:
+
+      Backups
+
+    DESCRIPTION:
+
+      A backup system that can be given commands to be run before and after a backup or restore
+
+    COMMANDS:
+      
+      help                 Display global or [command] help documentation.                
+      list                 List backups from a location           
+      restore              Restore a backup from a location to a database or directory            
+      save                 Save a backup from a database to a location    
+
+    GLOBAL OPTIONS:
+      
+      -d, --debug 
+          More verbose logging and nothing is actually run
+      
+      -h, --help 
+          Display help documentation
+      
+      -v, --version 
+          Display version information
+      
+      -t, --trace 
+          Display backtrace when an error occurs
