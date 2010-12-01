@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.email = %q{jamie@fearoffish.com}
   s.executables = ["backup"]
   s.extra_rdoc_files = ["README.mdown", "bin/backup", "lib/backup.rb", "lib/backup/plugin.rb", "lib/backup/plugins/lister.rb", "lib/backup/plugins/lzop.rb", "lib/backup/plugins/postgresql.rb", "lib/backup/plugins/s3.rb", "lib/backup/plugins/scp.rb", "lib/backup/plugins/splitter.rb"]
-  s.files = ["Gemfile", "Gemfile.lock", "Manifest", "README.mdown", "Rakefile", "backup.gemspec", "bin/aws", "bin/backup", "lib/backup.rb", "lib/backup/plugin.rb", "lib/backup/plugins/lister.rb", "lib/backup/plugins/lzop.rb", "lib/backup/plugins/postgresql.rb", "lib/backup/plugins/s3.rb", "lib/backup/plugins/scp.rb", "lib/backup/plugins/splitter.rb", "pharmmd_backups.gemspec"]
-  s.homepage = %q{http://github.com/pmdgithub/pharmmd-backups}
+  s.files = ["Gemfile", "Gemfile.lock", "Manifest", "README.mdown", "Rakefile", "backup.gemspec", "bin/backup", "lib/backup.rb", "lib/backup/plugin.rb", "lib/backup/plugins/lister.rb", "lib/backup/plugins/lzop.rb", "lib/backup/plugins/postgresql.rb", "lib/backup/plugins/s3.rb", "lib/backup/plugins/scp.rb", "lib/backup/plugins/splitter.rb", "pharmmd_backups.gemspec"]
+  s.homepage = %q{http://github.com/fearoffish/rehabilitate}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Backup", "--main", "README.mdown"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{backup}

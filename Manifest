@@ -13,4 +13,3 @@ lib/backup/plugins/postgresql.rb
 lib/backup/plugins/s3.rb
 lib/backup/plugins/scp.rb
 lib/backup/plugins/splitter.rb
-pharmmd_backups.gemspec
