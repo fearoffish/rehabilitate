@@ -83,9 +83,12 @@ command :save do |c|
   c.option '--location STRING', String, 'A location string which accompanies the type of backup e.g. "user:pass@ftp.example.com/dir".'
   c.option '--compressor', String, "Compress the backup on the fly using a compression plugin."
   c.option '--quiet', "Turn off outputting"
+  c.option '--skip-cleanup', "No deleting temporary files"
   c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
+  c.option '--steps STRING', String, "A comma separated list of steps to perform"
   c.action do |args, options|
-    options.default :user                 => ENV['USER'],
+    options.default :steps                => %w{ backup compress upload },
+                    :user                 => ENV['USER'],
                     :driver               => 'postgresql',
                     :host                 => 'localhost',
                     :quiet                => false,
@@ -98,15 +101,14 @@ command :save do |c|
     options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     setup_logger(options.quiet)
     if has_all_required_options?(required_options, options)
-      %w{ backup compress upload }.each do |cmd|
+      options.steps.each do |cmd|
         if options._failure
           log "Quitting due to failure, use debug next time."
         else
           Backup.send(cmd, options)
         end
       end
-
-      cleanup(options._tmp_files)
+      cleanup(options._tmp_files) unless options.skip_cleanup
     end
   end
 end
@@ -128,10 +130,12 @@ command :restore do |c|
   c.option '--location STRING', String, 'A location string which accompanies the type of backup e.g. "user:pass@ftp.example.com/dir".'
   c.option '--compressor', String, "Decompress the backup on the fly using a compression plugin."
   c.option '--quiet', "Turn off outputting"
+  c.option '--skip-cleanup', "No deleting temporary files"
   c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
   c.option '--number INTEGER', Integer, "The backup number to restore (taken from 'backup list')"
   c.action do |args, options|
-    options.default :user                 => ENV['USER'],
+    options.default :steps                => %w{ download uncompress restore },
+                    :user                 => ENV['USER'],
                     :driver               => 'postgresql',
                     :host                 => 'localhost',
                     :quiet                => false,
@@ -144,15 +148,14 @@ command :restore do |c|
     options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     setup_logger(options.quiet)
     if has_all_required_options?(required_options, options)
-      %w{ download decompress restore }.each do |cmd|
+      options.steps.each do |cmd|
         if options._failure
           log "Quitting due to failure, use debug next time."
         else
           Backup.send(cmd, options)
         end
       end
-
-      cleanup(options._tmp_files)
+      cleanup(options._tmp_files) unless options.skip_cleanup
     end
   end
 end
