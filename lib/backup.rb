@@ -1,4 +1,5 @@
 require 'backup/plugin'
+require 'backup/plugins/splitter'
 
 class Backup
   def self.backup(options)
@@ -16,9 +17,9 @@ class Backup
     driver.compress(options)
   end
 
-  def self.decompress(options)
+  def self.uncompress(options)
     driver = Plugin::create( options.compressor )
-    driver.decompress(options)
+    driver.uncompress(options)
   end
 
   def self.upload(options)

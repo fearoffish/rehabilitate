@@ -8,7 +8,7 @@ class S3 < Plugin
 
     log "Listing bucket contents for #{location[:bucket]}"
     dir = s3.directories.get(location[:bucket])
-    backups = dir.files.map(&:key).sort!
+    backups = sorted_backups(dir.files)
     backups.each_with_index do |backup, i|
       say "#{i}: #{prettify(backup)}"
     end
@@ -22,11 +22,17 @@ class S3 < Plugin
     log "Creating bucket #{location[:bucket]} if it doesn't exist"
     s3.directories.create(:key => location[:bucket])
     options._backup_files.collect! do |local_file|
-      log "Uploading #{local_file}"
-      log "   => #{location[:dir]}/#{File.basename(local_file)}"
-      s3.put_object(location[:bucket],
-                    "#{location[:dir]}/#{File.basename(local_file)}",
-                    File.read(local_file), { 'x-amz-acl' => 'private' })
+      if File.size(local_file) > options.split_size
+        splitter = Splitter.new
+        local_file = splitter.split(local_file, options)
+      else
+        [local_file]
+      end
+      local_file.each do |local_file|
+        log "Uploading #{local_file}"
+        log "   => #{local_file}"
+        log %x{ s3cmd put #{local_file} s3://#{location[:bucket]}/#{location[:dir]}/ }
+      end
     end
   end
 
@@ -38,20 +44,21 @@ class S3 < Plugin
     s3 = setup_fog(location)
     local_file = ""
     dir = s3.directories.get(location[:bucket])
-    backups = dir.files.map(&:key).sort!
+    backups = sorted_backups(dir.files)
     if backups[options.number]
       log "Restoring #{backups[options.number]}"
       restore_key = backups[options.number]
-      restore_file = s3.get_object(location[:bucket], restore_key)
-      local_file = File.join(options.tmp, restore_key.split("/").last)
-      File.open(local_file, 'w') do |file|
-        file.puts restore_file.body
-      end
+      output = %x{ s3cmd get --recursive --skip-existing s3://#{location[:bucket]}/#{backups[options.number]} #{options.tmp}}
+      output.split("\n").each {|f| log f}
     else
       log "Invalid number specified, use --list first to get the id you want to restore"
     end
-    options._tmp_files << local_file
-    options._backup_files = [local_file]
+    backup_files =  Dir.glob("#{options.tmp}/#{backups[options.number].split("/").last}/*")
+    log "Joining #{backup_files.size} files..."
+    joiner = Splitter.new
+    joined = joiner.join(backup_files) if backup_files.size > 1
+    options._tmp_files << joined
+    options._backup_files = [joined]
   end
 
 private
@@ -83,8 +90,15 @@ private
     )
   end
 
+  def sorted_backups(backups)
+    backups.collect do |f|
+      key = f.key
+      key.split("/")[0..-2].join("/")
+    end.sort.uniq
+  end
+
   def prettify(backup_name)
-    env, db, date, file = backup_name.scan(/(.*?)\/(.*?)--(.*?)\/(.*)/).flatten
+    env, db, date = backup_name.scan(/(.*?)\/(.*?)--(.*)/).flatten
     "#{env} => #{ DateTime.strptime(date, "%Y-%m-%d_%H-%M").strftime("%Y-%m-%d %H-%M UTC") }"
   end
 end

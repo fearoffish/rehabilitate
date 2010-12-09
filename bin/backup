@@ -37,17 +37,6 @@ $LOGGER = Log4r::Logger.new('backup')
 $LOGGER.outputters = SyslogOutputter.new("backup")
 $LOGGER.info "Starting backup"
 
-def has_all_required_options?(required, options)
-  missing = (required.map(&:to_sym) - options.__hash__.keys)
-  missing.each {|m| say "Missing option --#{m.to_s}"}
-  if missing.empty?
-    true
-  else
-    say "Consider looking at the help for this command with -h"
-    false
-  end
-end
-
 def location_from_options(options)
   ARGV[((options.__hash__.keys.size * 2) + 1)..-1]
 end
@@ -60,7 +49,7 @@ end
 
 def cleanup(files)
   $LOGGER.info "Cleaning up temporary files..."
-  files.each do |file|
+  files.flatten.each do |file|
     FileUtils.rm(file)
   end
 end
@@ -68,7 +57,6 @@ end
 begin
 
 command :save do |c|
-  required_options = %w{ driver database storage }
   c.syntax = 'backup save --driver DRIVER --storage TYPE --location LOCATION'
   c.description = 'Save a backup from a database to a location'
   c.example "Backup a postgresql database to scp",   "backup save --driver postgresql --storage scp --location \"user:pass@ftp.example.com\""
@@ -86,6 +74,8 @@ command :save do |c|
   c.option '--skip-cleanup', "No deleting temporary files"
   c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
   c.option '--steps STRING', String, "A comma separated list of steps to perform"
+  c.option '--file FILE', String, "The filename to use when we skip backing up and just upload"
+  c.option '--split-size BYTES', Integer, "How many bytes should we split files by. Default: 4.5Gb"
   c.action do |args, options|
     options.default :steps                => %w{ backup compress upload },
                     :user                 => ENV['USER'],
@@ -94,27 +84,29 @@ command :save do |c|
                     :quiet                => false,
                     :tmp                  => Dir.tmpdir,
                     :compressor           => 'lzop',
+                    :split_size           => (4.5*1024*1024*1024).to_i,
                     :_base_backup_name    => "#{options.database}--#{Time.now.strftime("%Y-%m-%d_%H-%M")}",
                     :_backup_files        => [],
                     :_failure             => nil,
                     :_tmp_files           => []
-    options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
-    setup_logger(options.quiet)
-    if has_all_required_options?(required_options, options)
-      options.steps.each do |cmd|
-        if options._failure
-          log "Quitting due to failure, use debug next time."
-        else
-          Backup.send(cmd, options)
-        end
-      end
-      cleanup(options._tmp_files) unless options.skip_cleanup
+    if options.file
+      options._backup_files = [options.file]
+    else
+      options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     end
+    setup_logger(options.quiet)
+    options.steps.split(",").each do |cmd|
+      if options._failure
+        log "Quitting due to failure, use debug next time."
+      else
+        Backup.send(cmd, options)
+      end
+    end
+    cleanup(options._tmp_files) unless options.file or options.skip_cleanup
   end
 end
 
 command :restore do |c|
-  required_options = %w{ driver database storage number }
   c.syntax = 'backup restore --driver DRIVER --storage TYPE'
   c.description = 'Restore a backup from a location to a database or directory'
   c.example "List all the backups on a storage type and location", "backup restore --list --storage TYPE"
@@ -131,6 +123,8 @@ command :restore do |c|
   c.option '--compressor', String, "Decompress the backup on the fly using a compression plugin."
   c.option '--quiet', "Turn off outputting"
   c.option '--skip-cleanup', "No deleting temporary files"
+  c.option '--steps STRING', String, "A comma separated list of steps to perform"
+  c.option '--file FILE', String, "The filename to use when we skip backing up and just upload"
   c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
   c.option '--number INTEGER', Integer, "The backup number to restore (taken from 'backup list')"
   c.action do |args, options|
@@ -147,16 +141,14 @@ command :restore do |c|
                     :_tmp_files           => []
     options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     setup_logger(options.quiet)
-    if has_all_required_options?(required_options, options)
-      options.steps.each do |cmd|
-        if options._failure
-          log "Quitting due to failure, use debug next time."
-        else
-          Backup.send(cmd, options)
-        end
+    options.steps.split(",").each do |cmd|
+      if options._failure
+        log "Quitting due to failure, use debug next time."
+      else
+        Backup.send(cmd, options)
       end
-      cleanup(options._tmp_files) unless options.skip_cleanup
     end
+    cleanup(options._tmp_files) unless options.file or options.skip_cleanup
   end
 end
 
@@ -174,9 +166,7 @@ command :list do |c|
                     :_failure             => nil
     options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     setup_logger(options.quiet)
-    if has_all_required_options?(required_options, options)
-      Backup.list(options)
-    end
+    Backup.list(options)
   end
 end
 

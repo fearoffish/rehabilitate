@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new('backup', '0.2.1') do |p|
+Echoe.new('backup', '0.3.0') do |p|
   p.description     = "Backup stuff"
   p.url             = "https://github.com/fearoffish/rehabilitate"
   p.author          = "Jamie van Dyke"
