@@ -14,8 +14,9 @@ class Lzop < Plugin
 
   def uncompress(options)
     options._backup_files.collect! do |backup_file|
-      new_backup_name = backup_file.gsub(".tar.lzop", "")
+      new_backup_name = "#{options.tmp}/#{File.basename(backup_file).gsub(".tar.lzop", "")}"
       log "Uncompressing files to #{options.tmp}"
+      log %{ cd #{options.tmp} && lzop -dq < #{options._backup_files.first} | tar -xvf - }
       log %x{ cd #{options.tmp} && lzop -dq < #{options._backup_files.first} | tar -xvf - }
       options._tmp_files << new_backup_name
       new_backup_name

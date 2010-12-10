@@ -1,7 +1,7 @@
 require 'plugin'
 
 class Splitter < Plugin
-  MAX_FILE_SIZE = (4.5*1024*1024*1024).to_i #4.5GB
+  MAX_FILE_SIZE = (4.5*1024*1024*1024*10).to_i #4.5TB
 
   def join(files)
     log %[ cat #{files.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]

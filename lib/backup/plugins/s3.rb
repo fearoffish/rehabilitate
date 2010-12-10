@@ -56,9 +56,9 @@ class S3 < Plugin
     backup_files =  Dir.glob("#{options.tmp}/#{backups[options.number].split("/").last}/*")
     log "Joining #{backup_files.size} files..."
     joiner = Splitter.new
-    joined = joiner.join(backup_files) if backup_files.size > 1
+    joined = backup_files.size > 1 ? joiner.join(backup_files) : backup_files
     options._tmp_files << joined
-    options._backup_files = [joined]
+    options._backup_files = joined.is_a?(Array) ? joined : [joined]
   end
 
 private
