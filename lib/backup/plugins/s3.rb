@@ -31,7 +31,7 @@ class S3 < Plugin
       local_file.each do |local_file|
         log "Uploading #{local_file}"
         log "   => #{local_file}"
-        log %x{ s3cmd put #{local_file} s3://#{location[:bucket]}/#{location[:dir]}/ }
+        log %x{ s3cmd --config /etc/s3cfg #{options.s3_options} put #{local_file} s3://#{location[:bucket]}/#{location[:dir]}/ }
       end
     end
   end
@@ -48,7 +48,7 @@ class S3 < Plugin
     if backups[options.number]
       log "Restoring #{backups[options.number]}"
       restore_key = backups[options.number]
-      output = %x{ s3cmd get --recursive --skip-existing s3://#{location[:bucket]}/#{backups[options.number]} #{options.tmp}}
+      output = %x{ s3cmd --config /etc/s3cfg get --recursive --skip-existing s3://#{location[:bucket]}/#{backups[options.number]} #{options.tmp}}
       output.split("\n").each {|f| log f}
     else
       log "Invalid number specified, use --list first to get the id you want to restore"
