@@ -1,5 +1,6 @@
 require 'plugin'
 require 'fog'
+require 'yaml'
 
 class S3 < Plugin
   def list(options)
