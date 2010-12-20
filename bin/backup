@@ -28,7 +28,7 @@ require 'fileutils'
 include Log4r
 
 program :name, 'Backups'
-program :version, '0.3.1'
+program :version, '0.3.2'
 program :description, 'A backup system that can be given commands to be run before and after a backup or restore'
 
 global_option('-d', '--debug', 'More verbose logging and nothing is actually run') { $DEBUG = true }
@@ -85,7 +85,7 @@ command :save do |c|
                     :quiet                => false,
                     :tmp                  => Dir.tmpdir,
                     :compressor           => 'lzop',
-                    :split_size           => (4.5*1024*1024*1024).to_i,
+                    :split_size           => (4.5*1024*1024*1024*1024*10).to_i,
                     :_base_backup_name    => "#{options.database}--#{Time.now.strftime("%Y-%m-%d_%H-%M")}",
                     :_backup_files        => [],
                     :_failure             => nil,
