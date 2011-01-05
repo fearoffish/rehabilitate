@@ -1,0 +1,179 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2010 Jamie van Dyke
+# You can redistribute it and/or modify it under the same terms as Ruby.
+#
+# The idea behind rehabilitate is that rather than worry about a million different
+# ways of backing up, we output our backup to a file and do whatever we want
+# with it, utilising existing tools to augment that.
+# For example, to back up a postgresql database to a an ftp server we would
+# give backup the command to run for backing up and then give it an after command
+# to upload the file.
+#
+# example: rehabilitate save --driver postgresql --type scp --location user:pass@ftp.example.com
+
+require "rubygems"
+require "bundler/setup"
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib/rehabilitate"
+
+require 'rehabilitate'
+require 'commander/import'
+require 'log4r'
+require 'log4r/outputter/syslogoutputter'
+require 'tmpdir'
+require 'fileutils'
+
+include Log4r
+
+program :name, 'Backups'
+program :version, '0.3.2'
+program :description, 'A backup system that can be given commands to be run before and after a backup or restore'
+
+global_option('-d', '--debug', 'More verbose logging and nothing is actually run') { $DEBUG = true }
+
+$LOGGER = Log4r::Logger.new('rehabilitate')
+$LOGGER.outputters = SyslogOutputter.new("rehabilitate")
+$LOGGER.info "Starting backup"
+
+def location_from_options(options)
+  ARGV[((options.__hash__.keys.size * 2) + 1)..-1]
+end
+
+def setup_logger(quiet)
+  unless quiet
+    $LOGGER.outputters << Outputter.stdout
+  end
+end
+
+def cleanup(files)
+  $LOGGER.info "Cleaning up temporary files..."
+  files.flatten.compact.each do |file|
+    $LOGGER.info "Deleting #{file}"
+    FileUtils.rm(file)
+  end
+end
+
+begin
+
+command :save do |c|
+  c.syntax = 'rehabilitate save --driver DRIVER --storage TYPE --location LOCATION'
+  c.description = 'Save a backup from a database to a location'
+  c.example "Backup a postgresql database to scp",   "rehabilitate save --driver postgresql --storage scp --location \"user:pass@ftp.example.com\""
+  c.example "Backup a postgresql database to s3",     "rehabilitate save --driver postgresql --storage s3 --location \"access_id:secret_key@bucket/file\""
+  c.example "Backup a postgresql database to a dir",  "rehabilitate save --driver postgresql --storage dir --location \"/some/location\""
+  c.option '--driver STRING', String, 'Chooses a dbms type.'
+  c.option '--database STRING', String, 'Give the database name.'
+  c.option '--user STRING', String, 'Give the database username.'
+  c.option '--pass STRING', String, 'Give the database password.'
+  c.option '--host STRING', String, 'Give the database host.'
+  c.option '--storage STRING', [:scp, :dir, :s3], 'Choices are [scp, dir, s3].'
+  c.option '--location STRING', String, 'A location string which accompanies the type of backup e.g. "user:pass@ftp.example.com/dir".'
+  c.option '--compressor', String, "Compress the backup on the fly using a compression plugin."
+  c.option '--quiet', "Turn off outputting"
+  c.option '--skip-cleanup', "No deleting temporary files"
+  c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
+  c.option '--steps STRING', String, "A comma separated list of steps to perform"
+  c.option '--file FILE', String, "The filename to use when we skip backing up and just upload"
+  c.option '--split-size BYTES', Integer, "How many bytes should we split files by. Default: 4.5TB"
+  c.action do |args, options|
+    options.default :steps                => %w{ backup compress upload },
+                    :user                 => ENV['USER'],
+                    :driver               => 'postgresql',
+                    :host                 => 'localhost',
+                    :quiet                => false,
+                    :tmp                  => Dir.tmpdir,
+                    :compressor           => 'lzop',
+                    :split_size           => (4.5*1024*1024*1024*1024*10).to_i,
+                    :_base_backup_name    => "#{options.database}--#{Time.now.strftime("%Y-%m-%d_%H-%M")}",
+                    :_backup_files        => [],
+                    :_failure             => nil,
+                    :_tmp_files           => []
+    if options.file
+      options._backup_files = [options.file]
+    else
+      options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
+    end
+    setup_logger(options.quiet)
+    (options.steps.is_a?(Array) ? options.steps : options.steps.split(",")).each do |cmd|
+      if options._failure
+        log "Quitting due to failure, use debug next time."
+      else
+        Backup.send(cmd, options)
+      end
+    end
+    cleanup(options._tmp_files) unless options.file or options.skip_cleanup
+  end
+end
+
+command :restore do |c|
+  c.syntax = 'rehabilitate restore --driver DRIVER --storage TYPE'
+  c.description = 'Restore a backup from a location to a database or directory'
+  c.example "List all the backups on a storage type and location", "rehabilitate restore --list --storage TYPE"
+  c.example "Restore a postgresql database from scp",   "rehabilitate restore --driver postgresql --storage scp --location \"user:pass@ftp.example.com\""
+  c.example "Restore a postgresql database from s3",    "rehabilitate restore --driver postgresql --storage s3 --location \"access_id:secret_key@bucket/file\""
+  c.example "Restore a postgresql database from a dir", "rehabilitate restore --driver postgresql --storage dir --location \"/some/location\""
+  c.option '--driver STRING', String, 'Chooses a dbms type.'
+  c.option '--database STRING', String, 'Give the database name.'
+  c.option '--user STRING', String, 'Give the database username.'
+  c.option '--pass STRING', String, 'Give the database password.'
+  c.option '--host STRING', String, 'Give the database host.'
+  c.option '--storage STRING', [:scp, :dir, :s3], 'Choices are [scp, dir, s3].'
+  c.option '--location STRING', String, 'A location string which accompanies the type of backup e.g. "user:pass@ftp.example.com/dir".'
+  c.option '--compressor', String, "Decompress the backup on the fly using a compression plugin."
+  c.option '--quiet', "Turn off outputting"
+  c.option '--skip-cleanup', "No deleting temporary files"
+  c.option '--steps STRING', String, "A comma separated list of steps to perform"
+  c.option '--file FILE', String, "The filename to use when we skip backing up and just upload"
+  c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
+  c.option '--number INTEGER', Integer, "The backup number to restore (taken from 'backup list')"
+  c.action do |args, options|
+    options.default :steps                => %w{ download uncompress restore },
+                    :user                 => ENV['USER'],
+                    :driver               => 'postgresql',
+                    :host                 => 'localhost',
+                    :quiet                => false,
+                    :tmp                  => Dir.tmpdir,
+                    :compressor           => 'lzop',
+                    :_base_backup_name    => "#{options.database}--#{Time.now.strftime("%Y-%m-%d_%H-%M")}",
+                    :_backup_files        => [],
+                    :_failure             => nil,
+                    :_tmp_files           => []
+    options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
+    setup_logger(options.quiet)
+    (options.steps.is_a?(Array) ? options.steps : options.steps.split(",")).each do |cmd|
+      if options._failure
+        log "Quitting due to failure, use debug next time."
+      else
+        Backup.send(cmd, options)
+      end
+    end
+    cleanup(options._tmp_files) unless options.file or options.skip_cleanup
+  end
+end
+
+command :list do |c|
+  required_options = %w{ storage }
+  c.syntax = 'rehabilitate list --driver DRIVER --storage TYPE'
+  c.description = 'List backups from a location'
+  c.example "List all the backups on a storage type and location", "rehabilitate list --storage TYPE --location s3"
+  c.option '--list', 'Get a list of downloads on a storage device given'
+  c.option '--storage STRING', [:scp, :dir, :s3], 'Choices are [scp, dir, s3].'
+  c.option '--location STRING', String, 'A location string which accompanies the type of backup e.g. "user:pass@ftp.example.com/dir".'
+  c.action do |args, options|
+    options.default :driver               => 'postgresql',
+                    :_backup_files        => [],
+                    :_failure             => nil
+    options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
+    setup_logger(options.quiet)
+    Backup.list(options)
+  end
+end
+
+$LOGGER.info "Backup complete"
+
+rescue => x
+  $LOGGER.debug "Backup failed with exception:"
+  $LOGGER.debug x.message
+end
