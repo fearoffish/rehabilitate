@@ -100,7 +100,7 @@ command :save do |c|
       if options._failure
         log "Quitting due to failure, use debug next time."
       else
-        Backup.send(cmd, options)
+        Rehabilitate.send(cmd, options)
       end
     end
     cleanup(options._tmp_files) unless options.file or options.skip_cleanup
@@ -146,7 +146,7 @@ command :restore do |c|
       if options._failure
         log "Quitting due to failure, use debug next time."
       else
-        Backup.send(cmd, options)
+        Rehabilitate.send(cmd, options)
       end
     end
     cleanup(options._tmp_files) unless options.file or options.skip_cleanup
@@ -167,7 +167,7 @@ command :list do |c|
                     :_failure             => nil
     options._backup_files = ["#{options.tmp}/#{options._base_backup_name}"]
     setup_logger(options.quiet)
-    Backup.list(options)
+    Rehabilitate.list(options)
   end
 end
 
