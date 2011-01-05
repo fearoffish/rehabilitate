@@ -1,7 +1,7 @@
-require 'backup/plugin'
-require 'backup/plugins/splitter'
+require 'rehabilitate/plugin'
+require 'rehabilitate/plugins/splitter'
 
-class Backup
+class Rehabilitate
   def self.backup(options)
     driver = Plugin::create( options.driver )
     driver.backup(options)

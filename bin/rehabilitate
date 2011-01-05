@@ -27,7 +27,7 @@ require 'fileutils'
 
 include Log4r
 
-program :name, 'Backups'
+program :name, 'Rehabilitate'
 program :version, '0.3.2'
 program :description, 'A backup system that can be given commands to be run before and after a backup or restore'
 
