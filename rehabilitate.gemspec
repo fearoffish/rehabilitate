@@ -17,20 +17,10 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rehabilitate", "--main", "README.mdown"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{rehabilitate}
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.4.1}
   s.summary = %q{Backup stuff}
-  [
-    ['echoe', '4.3.1']
-    ['commander', '4.0.3']
-    ['pluginfactory', '1.0.7']
-    ['log4r', '1.1.8']
-    ['net-ssh', '2.0.23']
-    ['net-scp', '1.0.4']
-    ['fog', '0.3.25']
-  ].each {|g| s.add_dependency(g) }
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
