@@ -19,6 +19,15 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{rehabilitate}
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Backup stuff}
+  [
+    ['echoe', '4.3.1']
+    ['commander', '4.0.3']
+    ['pluginfactory', '1.0.7']
+    ['log4r', '1.1.8']
+    ['net-ssh', '2.0.23']
+    ['net-scp', '1.0.4']
+    ['fog', '0.3.25']
+  ].each {|g| s.add_dependency(g) }
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
