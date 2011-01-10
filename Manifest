@@ -3,7 +3,6 @@ Gemfile.lock
 Manifest
 README.mdown
 Rakefile
-backup.gemspec
 bin/rehabilitate
 lib/rehabilitate.rb
 lib/rehabilitate/plugin.rb

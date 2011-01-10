@@ -1,4 +1,4 @@
-require 'plugin'
+require 'rehabilitate/plugin'
 
 class Postgresql < Plugin
   def backup(options)

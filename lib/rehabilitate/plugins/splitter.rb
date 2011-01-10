@@ -1,4 +1,4 @@
-require 'plugin'
+require 'rehabilitate/plugin'
 
 class Splitter < Plugin
   MAX_FILE_SIZE = (4.5*1024*1024*1024*1024*10).to_i #4.5TB

@@ -1,4 +1,4 @@
-require 'plugin'
+require 'rehabilitate/plugin'
 require 'fog'
 require 'yaml'
 

@@ -1,4 +1,4 @@
-require 'plugin'
+require 'rehabilitate/plugin'
 require 'uri'
 require 'net/ssh'
 require 'net/scp'

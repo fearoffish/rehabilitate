@@ -1,4 +1,4 @@
-require 'plugin'
+require 'rehabilitate/plugin'
 
 class Lzop < Plugin
   def compress(options)
