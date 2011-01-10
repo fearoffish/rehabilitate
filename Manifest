@@ -3,7 +3,7 @@ Gemfile.lock
 Manifest
 README.mdown
 Rakefile
-rehabilitate.gemspec
+backup.gemspec
 bin/rehabilitate
 lib/rehabilitate.rb
 lib/rehabilitate/plugin.rb
@@ -12,3 +12,4 @@ lib/rehabilitate/plugins/postgresql.rb
 lib/rehabilitate/plugins/s3.rb
 lib/rehabilitate/plugins/scp.rb
 lib/rehabilitate/plugins/splitter.rb
+rehabilitate.gemspec
