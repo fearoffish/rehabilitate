@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rehabilitate}
-  s.version = "0.3.6"
+  s.version = "0.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamie van Dyke"]
-  s.date = %q{2011-01-10}
+  s.date = %q{2011-01-12}
   s.default_executable = %q{rehabilitate}
   s.description = %q{Backup stuff}
   s.email = %q{jamie@fearoffish.com}
