@@ -28,7 +28,7 @@ require 'fileutils'
 include Log4r
 
 program :name, 'Rehabilitate'
-program :version, '0.3.2'
+program :version, Rehabilitate::VERSION
 program :description, 'A backup system that can be given commands to be run before and after a backup or restore'
 
 global_option('-d', '--debug', 'More verbose logging and nothing is actually run') { $DEBUG = true }

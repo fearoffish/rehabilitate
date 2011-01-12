@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'rake'
 require 'echoe'
+require 'lib/rehabilitate.rb'
 
-Echoe.new('rehabilitate', "0.3.6") do |p|
+Echoe.new('rehabilitate', Rehabilitate::VERSION) do |p|
   p.description     = "Backup stuff"
   p.url             = "https://github.com/fearoffish/rehabilitate"
   p.author          = "Jamie van Dyke"
