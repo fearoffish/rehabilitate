@@ -22,7 +22,7 @@ class Postgresql < Plugin
       log %[psql -h #{options.host} -U #{options.user} #{options.database} < #{drop_table_sql} #{"> /dev/null 2>&1" unless options.debug} ] unless $? == 256
       log %x[psql -h #{options.host} -U #{options.user} #{options.database} < #{drop_table_sql} #{"> /dev/null 2>&1" unless options.debug} ] unless $? == 256
       log %[psql -h #{options.host} -U #{options.user} #{options.database} < #{backup_file} #{"> /dev/null 2>&1" unless options.debug} ] unless $? == 256
-      log %x[psql -h #{options.host} -U #{options.user} #{options.database} < #{backup_file} #{"> /dev/null 2>&1" unless options.debug} ]] unless $? == 256
+      log %x[psql -h #{options.host} -U #{options.user} #{options.database} < #{backup_file} #{"> /dev/null 2>&1" unless options.debug} ] unless $? == 256
       options._tmp_files << drop_table_sql
       options._failure = true if $? == 256
     end
