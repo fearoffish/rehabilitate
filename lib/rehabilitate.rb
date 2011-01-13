@@ -2,7 +2,7 @@ require 'rehabilitate/plugin'
 require 'rehabilitate/plugins/splitter'
 
 class Rehabilitate
-  VERSION = "0.3.11"
+  VERSION = "0.3.12"
   
   def self.backup(options)
     driver = Plugin::create( options.driver )
