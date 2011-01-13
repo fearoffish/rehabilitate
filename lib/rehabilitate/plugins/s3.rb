@@ -32,6 +32,7 @@ class S3 < Plugin
       local_file.each do |local_file|
         log "Uploading #{local_file}"
         log "   => #{local_file}"
+        log %{ s3cmd --config /etc/s3cfg #{options.s3_options} put #{local_file} s3://#{location[:bucket]}/#{location[:dir]}/ }
         log %x{ s3cmd --config /etc/s3cfg #{options.s3_options} put #{local_file} s3://#{location[:bucket]}/#{location[:dir]}/ }
       end
     end
