@@ -75,7 +75,7 @@ private
       location[:dir]                   = remaining.split("/")[1..-1].join("/")
     else
       # use a ~/.fog file
-      fog_config = YAML.load(File.read(File.expand_path(ENV['FOG_RC'] || "~/.fog" if File.exist("~/.fog") || "/etc/fog")))
+      fog_config = YAML.load(File.read(File.expand_path(ENV['FOG_RC'] || ("~/.fog" if File.exist("~/.fog")) || "/etc/fog")))
       location[:access_key] = fog_config[:default][:aws_access_key_id]
       location[:secret_id]  = fog_config[:default][:aws_secret_access_key]
       location[:bucket]     = fog_config[:default][:bucket]
