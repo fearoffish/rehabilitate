@@ -127,6 +127,7 @@ command :restore do |c|
   c.option '--steps STRING', String, "A comma separated list of steps to perform"
   c.option '--file FILE', String, "The filename to use when we skip backing up and just upload"
   c.option '--tmp STRING', String, "Where to store temporary files. Default: #{Dir.tmpdir}"
+  c.option '--post-hook STRING', String, "A bash command to run after the restore is done"
   c.option '--number INTEGER', Integer, "The backup number to restore (taken from 'backup list')"
   c.action do |args, options|
     options.default :steps                => %w{ download uncompress restore },
@@ -148,6 +149,10 @@ command :restore do |c|
       else
         Rehabilitate.send(cmd, options)
       end
+    end
+    if options.post_hook
+      log "Running post-hook: #{options.post_hook}"
+      %x[ #{options.post_hook} ]
     end
     cleanup(options._tmp_files) unless options.file or options.skip_cleanup
   end
