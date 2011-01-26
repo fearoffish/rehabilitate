@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rehabilitate}
-  s.version = "0.3.15"
+  s.version = "0.3.16"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamie van Dyke"]
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<net-ssh>, ["~> 2.0.23"])
       s.add_runtime_dependency(%q<net-scp>, ["~> 1.0.4"])
       s.add_runtime_dependency(%q<fog>, ["~> 0.3.25"])
+      s.add_runtime_dependency(%q<excon>, ["~> 0.4.0"])
     else
       s.add_dependency(%q<commander>, ["~> 4.0.3"])
       s.add_dependency(%q<pluginfactory>, ["~> 1.0.7"])
@@ -37,6 +38,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<net-ssh>, ["~> 2.0.23"])
       s.add_dependency(%q<net-scp>, ["~> 1.0.4"])
       s.add_dependency(%q<fog>, ["~> 0.3.25"])
+      s.add_dependency(%q<excon>, ["~> 0.4.0"])
     end
   else
     s.add_dependency(%q<commander>, ["~> 4.0.3"])
@@ -45,5 +47,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<net-ssh>, ["~> 2.0.23"])
     s.add_dependency(%q<net-scp>, ["~> 1.0.4"])
     s.add_dependency(%q<fog>, ["~> 0.3.25"])
+    s.add_dependency(%q<excon>, ["~> 0.4.0"])
   end
 end
