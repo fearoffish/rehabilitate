@@ -16,7 +16,8 @@ Echoe.new('rehabilitate', Rehabilitate::VERSION) do |p|
                      'log4r ~>1.1.8',
                      'net-ssh ~>2.0.23',
                      'net-scp ~>1.0.4',
-                     'fog ~>0.3.25' ]
+                     'fog ~>0.3.25',
+                     'excon ~>0.4.0' ]
 end
 
 Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }

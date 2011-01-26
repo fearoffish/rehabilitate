@@ -7,7 +7,7 @@ GEM
     echoe (4.3.1)
       gemcutter
       rubyforge
-    excon (0.2.4)
+    excon (0.4.0)
     fog (0.3.25)
       builder
       excon (>= 0.2.4)
@@ -20,8 +20,8 @@ GEM
     formatador (0.0.16)
     gemcutter (0.6.1)
     highline (1.6.1)
-    json (1.4.6)
-    json_pure (1.4.6)
+    json (1.5.1)
+    json_pure (1.5.1)
     log4r (1.1.8)
     mime-types (1.16)
     net-scp (1.0.4)
@@ -39,6 +39,7 @@ PLATFORMS
 DEPENDENCIES
   commander (= 4.0.3)
   echoe (= 4.3.1)
+  excon (= 0.4.0)
   fog (= 0.3.25)
   log4r (= 1.1.8)
   net-scp (= 1.0.4)
