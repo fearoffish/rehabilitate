@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamie van Dyke"]
-  s.date = %q{2011-01-26}
+  s.date = %q{2011-02-18}
   s.default_executable = %q{rehabilitate}
   s.description = %q{Backup stuff}
   s.email = %q{jamie@fearoffish.com}
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rehabilitate", "--main", "README.mdown"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{rehabilitate}
-  s.rubygems_version = %q{1.4.1}
+  s.rubygems_version = %q{1.5.0}
   s.summary = %q{Backup stuff}
 
   if s.respond_to? :specification_version then

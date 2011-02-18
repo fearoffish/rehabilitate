@@ -1,7 +1,10 @@
 require 'rubygems'
 require 'rake'
 require 'echoe'
-require 'lib/rehabilitate.rb'
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib"
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib/rehabilitate"
+
+require 'rehabilitate'
 
 Echoe.new('rehabilitate', Rehabilitate::VERSION) do |p|
   p.description     = "Backup stuff"
