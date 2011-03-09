@@ -11,4 +11,5 @@ lib/rehabilitate/plugins/postgresql.rb
 lib/rehabilitate/plugins/s3.rb
 lib/rehabilitate/plugins/scp.rb
 lib/rehabilitate/plugins/splitter.rb
+lib/rehabilitate/version.rb
 rehabilitate.gemspec

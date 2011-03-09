@@ -12,7 +12,6 @@
 #
 # example: rehabilitate save --driver postgresql --type scp --location user:pass@ftp.example.com
 
-require "rubygems"
 require "bundler/setup"
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"

@@ -1,52 +1,29 @@
 # -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
+require "rehabilitate/version"
 
 Gem::Specification.new do |s|
-  s.name = %q{rehabilitate}
-  s.version = "0.3.16"
+  s.name        = "rehabilitate"
+  s.version     = Rehabilitate::VERSION
+  s.platform    = Gem::Platform::RUBY
+  s.authors     = ["Jamie van Dyke"]
+  s.email       = ["jamie@fearoffish.com"]
+  s.homepage    = ""
+  s.summary     = %q{Handle backups with a plugin based architecture}
+  s.description = %q{Handle backups with a plugin based architecture}
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jamie van Dyke"]
-  s.date = %q{2011-02-18}
-  s.default_executable = %q{rehabilitate}
-  s.description = %q{Backup stuff}
-  s.email = %q{jamie@fearoffish.com}
-  s.executables = ["rehabilitate"]
-  s.extra_rdoc_files = ["README.mdown", "bin/rehabilitate", "lib/rehabilitate.rb", "lib/rehabilitate/plugin.rb", "lib/rehabilitate/plugins/lzop.rb", "lib/rehabilitate/plugins/postgresql.rb", "lib/rehabilitate/plugins/s3.rb", "lib/rehabilitate/plugins/scp.rb", "lib/rehabilitate/plugins/splitter.rb"]
-  s.files = ["Gemfile", "Gemfile.lock", "Manifest", "README.mdown", "Rakefile", "bin/rehabilitate", "lib/rehabilitate.rb", "lib/rehabilitate/plugin.rb", "lib/rehabilitate/plugins/lzop.rb", "lib/rehabilitate/plugins/postgresql.rb", "lib/rehabilitate/plugins/s3.rb", "lib/rehabilitate/plugins/scp.rb", "lib/rehabilitate/plugins/splitter.rb", "rehabilitate.gemspec"]
-  s.homepage = %q{https://github.com/fearoffish/rehabilitate}
-  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rehabilitate", "--main", "README.mdown"]
+  s.rubyforge_project = "rehabilitate"
+
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{rehabilitate}
-  s.rubygems_version = %q{1.5.0}
-  s.summary = %q{Backup stuff}
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<commander>, ["~> 4.0.3"])
-      s.add_runtime_dependency(%q<pluginfactory>, ["~> 1.0.7"])
-      s.add_runtime_dependency(%q<log4r>, ["~> 1.1.8"])
-      s.add_runtime_dependency(%q<net-ssh>, ["~> 2.0.23"])
-      s.add_runtime_dependency(%q<net-scp>, ["~> 1.0.4"])
-      s.add_runtime_dependency(%q<fog>, ["~> 0.3.25"])
-      s.add_runtime_dependency(%q<excon>, ["~> 0.4.0"])
-    else
-      s.add_dependency(%q<commander>, ["~> 4.0.3"])
-      s.add_dependency(%q<pluginfactory>, ["~> 1.0.7"])
-      s.add_dependency(%q<log4r>, ["~> 1.1.8"])
-      s.add_dependency(%q<net-ssh>, ["~> 2.0.23"])
-      s.add_dependency(%q<net-scp>, ["~> 1.0.4"])
-      s.add_dependency(%q<fog>, ["~> 0.3.25"])
-      s.add_dependency(%q<excon>, ["~> 0.4.0"])
-    end
-  else
-    s.add_dependency(%q<commander>, ["~> 4.0.3"])
-    s.add_dependency(%q<pluginfactory>, ["~> 1.0.7"])
-    s.add_dependency(%q<log4r>, ["~> 1.1.8"])
-    s.add_dependency(%q<net-ssh>, ["~> 2.0.23"])
-    s.add_dependency(%q<net-scp>, ["~> 1.0.4"])
-    s.add_dependency(%q<fog>, ["~> 0.3.25"])
-    s.add_dependency(%q<excon>, ["~> 0.4.0"])
-  end
+  s.add_runtime_dependency "rehabilitate"
+  s.add_dependency("commander")
+  s.add_dependency("pluginfactory")
+  s.add_dependency("log4r")
+  s.add_dependency("net-ssh")
+  s.add_dependency("net-scp")
+  s.add_dependency("fog")
 end
