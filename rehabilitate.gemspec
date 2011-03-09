@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency "rehabilitate"
   s.add_dependency("commander")
   s.add_dependency("pluginfactory")
   s.add_dependency("log4r")
