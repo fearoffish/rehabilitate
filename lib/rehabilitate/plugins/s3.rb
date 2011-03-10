@@ -2,7 +2,7 @@ require 'rehabilitate/plugin'
 require 'fog'
 require 'yaml'
 
-class S3 < Plugin
+class S3 < Rehabilitate::Plugin
   def list(options)
     location = parse_upload_string(options.location)
     s3 = setup_fog(location)

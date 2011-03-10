@@ -12,11 +12,16 @@
 #
 # example: rehabilitate save --driver postgresql --type scp --location user:pass@ftp.example.com
 
-require "bundler/setup"
+begin
+  require "bundler/setup"
+rescue LoadError
+  require "rubygems"
+end
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib/rehabilitate"
 
+require "pluginfactory"
 require 'rehabilitate'
 require 'commander/import'
 require 'log4r'

@@ -1,14 +1,13 @@
 PATH
   remote: .
   specs:
-    rehabilitate (0.4.0)
+    rehabilitate (0.4.4)
       commander
       fog
       log4r
       net-scp
       net-ssh
       pluginfactory
-      rehabilitate
 
 GEM
   remote: http://rubygems.org/

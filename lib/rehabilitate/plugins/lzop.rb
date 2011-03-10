@@ -1,6 +1,6 @@
 require 'rehabilitate/plugin'
 
-class Lzop < Plugin
+class Lzop < Rehabilitate::Plugin
   def compress(options)
     options._backup_files.collect! do |backup_file|
       new_backup_name = "#{backup_file}.tar.lzop"

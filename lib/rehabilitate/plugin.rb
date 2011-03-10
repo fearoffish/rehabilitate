@@ -1,13 +1,13 @@
-require "pluginfactory"
-
-class Plugin
-  include PluginFactory
+module Rehabilitate
+  class Plugin
+    include ::PluginFactory
     
-  def self::derivative_dirs
-     ["plugins"]
-  end
+    def self::derivative_dirs
+       ["plugins"]
+    end
   
-  def log(message)
-    $LOGGER.info message
+    def log(message)
+      $LOGGER.info message
+    end
   end
 end

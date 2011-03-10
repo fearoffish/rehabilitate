@@ -1,11 +1,11 @@
 require 'rehabilitate/plugin'
 
-class Splitter < Plugin
+class Splitter < Rehabilitate::Plugin
   MAX_FILE_SIZE = (4.5*1024*1024*1024*1024*10).to_i #4.5TB
 
   def join(files)
-    log %[ cat #{files.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
-    log %x[ cat #{files.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
+    log %[ cat #{files.reverse.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
+    log %x[ cat #{files.reverse.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
     files[0].split("-")[0..-2].join("-")
   end
 

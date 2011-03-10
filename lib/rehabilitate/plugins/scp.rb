@@ -3,7 +3,7 @@ require 'uri'
 require 'net/ssh'
 require 'net/scp'
 
-class Scp < Plugin
+class Scp < Rehabilitate::Plugin
   def upload(options)
     location = parse_upload_string(options.location)
     remote_dir = "#{location[:dir]}/#{options._base_backup_name}"

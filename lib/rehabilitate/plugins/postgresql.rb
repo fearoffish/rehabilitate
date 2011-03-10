@@ -1,6 +1,6 @@
 require 'rehabilitate/plugin'
 
-class Postgresql < Plugin
+class Postgresql < Rehabilitate::Plugin
   def backup(options)
     options._backup_files.collect! do |backup_file|
       new_backup_name = "#{backup_file}.sql"
