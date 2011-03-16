@@ -1,4 +1,5 @@
 require 'rehabilitate/plugin'
+require 'rehabilitate/plugins/splitter'
 require 'fog'
 require 'yaml'
 
