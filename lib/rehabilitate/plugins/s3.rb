@@ -96,8 +96,9 @@ private
   def sorted_backups(backups)
     backups.collect do |f|
       key = f.key
-      key.split("/")[0..-2].join("/")
-    end.sort.uniq
+      id = key.split("/")[0..-2].join("/")
+      id == "" ? nil : id
+    end.compact.sort.uniq
   end
 
   def prettify(backup_name)
