@@ -87,9 +87,10 @@ private
   end
 
   def setup_fog(location)
-    Fog::AWS::Storage.new(
-        :aws_access_key_id     => location[:access_key],
-        :aws_secret_access_key => location[:secret_id]
+    Fog::Storage.new(
+      :provider => 'aws',
+      :aws_access_key_id     => location[:access_key],
+      :aws_secret_access_key => location[:secret_id]
     )
   end
 

@@ -19,10 +19,10 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency("commander")
-  s.add_dependency("pluginfactory")
-  s.add_dependency("log4r")
-  s.add_dependency("net-ssh")
-  s.add_dependency("net-scp")
-  s.add_dependency("fog")
+  s.add_dependency("commander", "4.0.4")
+  s.add_dependency("pluginfactory", "1.0.7")
+  s.add_dependency("log4r", "1.1.9")
+  s.add_dependency("net-ssh", "2.1.4")
+  s.add_dependency("net-scp", "1.0.4")
+  s.add_dependency("fog", "0.10.0")
 end

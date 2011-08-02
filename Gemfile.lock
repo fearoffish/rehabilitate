@@ -1,39 +1,40 @@
 PATH
   remote: .
   specs:
-    rehabilitate (0.4.6)
-      commander
-      fog
-      log4r
-      net-scp
-      net-ssh
-      pluginfactory
+    rehabilitate (0.4.7)
+      commander (= 4.0.4)
+      fog (= 0.10.0)
+      log4r (= 1.1.9)
+      net-scp (= 1.0.4)
+      net-ssh (= 2.1.4)
+      pluginfactory (= 1.0.7)
 
 GEM
   remote: http://rubygems.org/
   specs:
     builder (3.0.0)
-    commander (4.0.3)
+    commander (4.0.4)
       highline (>= 1.5.0)
-    excon (0.6.0)
-    fog (0.6.0)
+    excon (0.6.5)
+    fog (0.10.0)
       builder
-      excon (>= 0.5.5)
-      formatador (>= 0.0.16)
-      json
+      excon (~> 0.6.5)
+      formatador (~> 0.2.0)
       mime-types
-      net-ssh (>= 2.0.23)
-      nokogiri (>= 1.4.4)
+      multi_json (~> 1.0.3)
+      net-scp (~> 1.0.4)
+      net-ssh (~> 2.1.4)
+      nokogiri (~> 1.5.0)
       ruby-hmac
-    formatador (0.1.3)
-    highline (1.6.1)
-    json (1.5.1)
-    log4r (1.1.8)
+    formatador (0.2.0)
+    highline (1.6.2)
+    log4r (1.1.9)
     mime-types (1.16)
+    multi_json (1.0.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
-    net-ssh (2.0.23)
-    nokogiri (1.4.4)
+    net-ssh (2.1.4)
+    nokogiri (1.5.0)
     pluginfactory (1.0.7)
     ruby-hmac (0.4.0)
 
