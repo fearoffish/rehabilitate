@@ -4,9 +4,10 @@ class Splitter < Rehabilitate::Plugin
   MAX_FILE_SIZE = (4.5*1024*1024*1024*1024*10).to_i #4.5TB
 
   def join(files)
-    log %[ cat #{files.reverse.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
-    log %x[ cat #{files.reverse.join(" ")} > #{files[0].split("-")[0..-2].join("-")} ]
-    files[0].split("-")[0..-2].join("-")
+    base_file = file.first.match(/(.*)-.*/)[1]
+    log %[ cat #{base_file}-[aa-zz] > #{base_file} ]
+    log %x[ cat #{base_file}-[aa-zz] > #{base_file} ]
+    base_file
   end
 
   def split(file, options)
@@ -15,6 +16,8 @@ class Splitter < Rehabilitate::Plugin
     log "  => #{split_size} byte pieces"
 
     log %x{ split -b #{split_size} #{file} #{file}- }
-    Dir.glob("#{file}-??")
+    split_files = Dir.glob("#{file}-??")
+    options._tmp_files << split_files
+    split_files
   end
 end
