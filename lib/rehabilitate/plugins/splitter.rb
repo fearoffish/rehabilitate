@@ -4,7 +4,7 @@ class Splitter < Rehabilitate::Plugin
   MAX_FILE_SIZE = (4.5*1024*1024*1024*1024*10).to_i #4.5TB
 
   def join(files)
-    base_file = file.first.match(/(.*)-.*/)[1]
+    base_file = files.first.match(/(.*)-.*/)[1]
     log %[ cat #{base_file}-[aa-zz] > #{base_file} ]
     log %x[ cat #{base_file}-[aa-zz] > #{base_file} ]
     base_file
